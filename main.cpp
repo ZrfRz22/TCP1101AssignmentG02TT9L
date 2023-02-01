@@ -141,6 +141,7 @@ void AlienRight (vector<vector<char>> &Board, int Row, int Column)
             break;
         }
     }
+    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienLeft (vector<vector<char>> &Board, int Row, int Column)
@@ -177,7 +178,8 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column)
             break;
         }
     }
-
+    
+    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienDown (vector<vector<char>> &Board, int Row, int Column)
@@ -214,6 +216,7 @@ void AlienDown (vector<vector<char>> &Board, int Row, int Column)
         }
     }
 
+    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienUp (vector<vector<char>> &Board, int Row, int Column)
@@ -250,6 +253,8 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column)
             break;
         }
     }
+
+    DotRandomiser (Board, GameObjects, Row, Column);
 
 }
 
