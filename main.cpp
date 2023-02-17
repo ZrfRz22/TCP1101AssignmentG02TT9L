@@ -36,6 +36,21 @@ int ClearScreen()
         #endif
     }
 
+void DotRandomiser (vector<vector<char>> &Board, int Row, int Column)
+{
+    srand(time(0));
+    for (int i=0; i<Row; ++i)
+    {
+        for (int j=0; j<Column; ++j)
+        {
+            if (Board[i][j] == '.')
+            {
+                Board[i][j] = GameObjects[rand() % 8];      
+            }
+        }
+    }
+}
+
 void PrintMultipleTimes (int x, string print)
 {
     for (int i=0; i<x; ++i)
@@ -66,27 +81,6 @@ void DisplayBoard (const vector<vector<char>> &Board, int Row, int Column)
     }
 }
 
-bool Stopper (vector<vector<char>> &Board, int Row, int Column)
-{
-    if (Board[Row][Column] == 'R')
-    {   
-        cout << "Alien hits a rock!" << endl;
-        Board[Row][Column] = GameObjects[rand() % 7];
-        return false;
-    }
-
-    else if (48 < Board[Row][Column] && Board[Row][Column] < 58)
-    {   
-        cout << "A zombie is blocking your path!" << endl;
-        return false;
-    }
-
-    else 
-    {   
-        return true;
-    }
-}
-
 void ArrowMovement (vector<vector<char>> &Board, int Row, int Column, char Arrow);
 void AlienFind (vector<vector<char>> &Board, int &ARow, int &AColumn, int Row, int Column)
 {
@@ -106,156 +100,212 @@ void AlienFind (vector<vector<char>> &Board, int &ARow, int &AColumn, int Row, i
     }
 }
 
-void DotRandomiser (vector<vector<char>> &Board, const char GameObjects[], int Row, int Column);
+bool HitRock(vector<vector<char>> &Board, int NextRow, int NextColumn)
+{
+    if (Board[NextRow][NextColumn] == 'R')
+    {   
+        cout << "Alien hits a rock!" << endl;
+        Board[NextRow][NextColumn] = GameObjects[rand() % 7];
+        return true;
+    }
+
+    else 
+    {   
+        return false;
+    }
+}
+
+bool HitZombie(vector<vector<char>> &Board, int NextRow, int NextColumn)
+{
+    if (48 < Board[NextRow][NextColumn] && Board[NextRow][NextColumn] < 58)
+    {   
+        cout << "A zombie is blocking your path!" << endl;
+        return true;
+    }
+
+    else 
+    {   
+        return false;
+    }
+}
+
+void HitHealthPod()
+{
+
+}
+
+bool HitBorder(vector<vector<char>> &Board, int Row, int Column, int NextMove)
+{
+    if (NextMove >= Column)
+    {
+        cout << "The Alien has hit the border" << endl;
+        cout << "Move: " << NextMove << endl;
+        return true;
+    }
+
+    else if (NextMove <= -1)
+    {
+        cout << "The Alien has hit the border" << endl;
+        cout << "Move: " << NextMove << endl;
+        return true;
+    }
+
+    else if (NextMove >= Row)
+    {
+        cout << "The Alien has hit the border" << endl;
+        cout << "Move: " << NextMove << endl;
+        return true;
+    }
+
+    else
+    {
+        return false;
+    }
+}
+
+
 void AlienRight (vector<vector<char>> &Board, int Row, int Column)
 {
     int ARow, AColumn;
     AlienFind (Board, ARow, AColumn, Row, Column);
-    int Counter = 0;
-    int ColCounter = AColumn;
 
-    while (ColCounter < Column-1)
+    int Counter = 0;
+    while (true)
     {
-        if (Stopper(Board, ARow, AColumn+Counter+1))
+        if (HitBorder(Board, Row, Column, AColumn+Counter+1) ||
+            HitRock(Board, ARow, AColumn+Counter+1) ||
+            HitZombie(Board, ARow, AColumn+Counter+1))
         {   
+            DotRandomiser (Board, Row, Column);
+            DisplayBoard (Board, Row, Column);
+            break;
+        }
+
+        else
+        {
             char Temp = Board[ARow][AColumn+Counter+1];
             Board[ARow][AColumn+Counter] = '.';
             Board[ARow][AColumn+Counter+1] = 'A';
             DisplayBoard (Board, Row, Column);
 
-            ColCounter += 1;
             Counter += 1;
 
             if (Temp == '<' || Temp == '>' || Temp == 'V' || Temp == '^')
             {
                 ArrowMovement (Board, Row, Column, Temp);
                 break;
-
             }
-        }
-
-        else
-        {
-            DotRandomiser (Board, GameObjects, Row, Column);
-            DisplayBoard (Board, Row, Column);
-            break;
+            
         }
     }
-    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienLeft (vector<vector<char>> &Board, int Row, int Column)
 {
     int ARow, AColumn;
     AlienFind (Board, ARow, AColumn, Row, Column);
-    int Counter = 0;
-    int ColCounter = AColumn;
 
-    while (ColCounter > 0)
+    int Counter = 0;
+    while (true)
     {
-        if (Stopper(Board, ARow, AColumn-Counter-1))
+        if (HitBorder(Board, Row, Column, AColumn-Counter-1) ||
+            HitRock(Board, ARow, AColumn-Counter-1) ||
+            HitZombie(Board, ARow, AColumn-Counter-1))
         {   
+            DotRandomiser (Board, Row, Column);
+            DisplayBoard (Board, Row, Column);
+            break;
+        }
+
+        else
+        {
             char Temp = Board[ARow][AColumn-Counter-1];
             Board[ARow][AColumn-Counter] = '.';
             Board[ARow][AColumn-Counter-1] = 'A';
             DisplayBoard (Board, Row, Column);
 
-            ColCounter -= 1;
             Counter += 1;
 
             if (Temp == '<' || Temp == '>' || Temp == 'V' || Temp == '^')
             {
                 ArrowMovement (Board, Row, Column, Temp);
                 break;
-
             }
-        }
-
-        else
-        {
-            DotRandomiser (Board, GameObjects, Row, Column);
-            DisplayBoard (Board, Row, Column);
-            break;
+            
         }
     }
-    
-    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienDown (vector<vector<char>> &Board, int Row, int Column)
 {
     int ARow, AColumn;
     AlienFind (Board, ARow, AColumn, Row, Column);
-    int Counter = 0;
-    int RowCounter = ARow;
 
-    while (RowCounter < Row-1)
+    int Counter = 0;
+    while (true)
     {
-        if (Stopper(Board, ARow+Counter+1, AColumn))
+        if (HitBorder(Board, Row, Column, ARow+Counter+1) ||
+            HitRock(Board, ARow+Counter+1, AColumn) ||
+            HitZombie(Board, ARow+Counter+1, AColumn))
         {   
+            DotRandomiser (Board, Row, Column);
+            DisplayBoard (Board, Row, Column);
+            break;
+        }
+
+        else
+        {
             char Temp = Board[ARow+Counter+1][AColumn];
             Board[ARow+Counter][AColumn] = '.';
             Board[ARow+Counter+1][AColumn] = 'A';
             DisplayBoard (Board, Row, Column);
 
-            RowCounter += 1;
             Counter += 1;
 
             if (Temp == '<' || Temp == '>' || Temp == 'V' || Temp == '^')
             {
                 ArrowMovement (Board, Row, Column, Temp);
                 break;
-
             }
-        }
-        else
-        {
-            DotRandomiser (Board, GameObjects, Row, Column);
-            DisplayBoard (Board, Row, Column);
-            break;
+            
         }
     }
-
-    DotRandomiser (Board, GameObjects, Row, Column);
 }
 
 void AlienUp (vector<vector<char>> &Board, int Row, int Column)
 {
     int ARow, AColumn;
     AlienFind (Board, ARow, AColumn, Row, Column);
-    int Counter = 0;
-    int RowCounter = ARow;
 
-    while (RowCounter > 0)
+    int Counter = 0;
+    while (true)
     {
-        if (Stopper(Board, ARow-Counter-1, AColumn))
+        if (HitBorder(Board, Row, Column, ARow-Counter-1) ||
+            HitRock(Board, ARow-Counter-1, AColumn) ||
+            HitZombie(Board, ARow-Counter-1, AColumn))
         {   
+            DotRandomiser (Board, Row, Column);
+            DisplayBoard (Board, Row, Column);
+            break;
+        }
+
+        else
+        {
             char Temp = Board[ARow-Counter-1][AColumn];
             Board[ARow-Counter][AColumn] = '.';
             Board[ARow-Counter-1][AColumn] = 'A';
             DisplayBoard (Board, Row, Column);
 
-            RowCounter -= 1;
             Counter += 1;
 
             if (Temp == '<' || Temp == '>' || Temp == 'V' || Temp == '^')
             {
                 ArrowMovement (Board, Row, Column, Temp);
                 break;
-
             }
-        }
-
-        else
-        {
-            DotRandomiser (Board, GameObjects, Row, Column);
-            DisplayBoard (Board, Row, Column);
-            break;
+            
         }
     }
-
-    DotRandomiser (Board, GameObjects, Row, Column);
-
 }
 
 void ArrowMovement (vector<vector<char>> &Board, int Row, int Column, char Arrow)
@@ -277,21 +327,6 @@ void ArrowMovement (vector<vector<char>> &Board, int Row, int Column, char Arrow
         case '^':
             AlienUp (Board, Row, Column);
             break;
-    }
-}
-
-void DotRandomiser (vector<vector<char>> &Board, const char GameObjects[], int Row, int Column)
-{
-    srand(time(0));
-    for (int i=0; i<Row; ++i)
-    {
-        for (int j=0; j<Column; ++j)
-        {
-            if (Board[i][j] == '.')
-            {
-                Board[i][j] = GameObjects[rand() % 8];      
-            }
-        }
     }
 }
 
@@ -324,6 +359,245 @@ void ChangeArrow (vector<vector<char>> &Board, const int Row, const int Column)
 
     DisplayBoard (Board, Row, Column);
 }
+
+void DisplayStatOnZombieTurn(int AlienHP_DMG[], int ZombieStats[][3], int Zombies, int ZombieNum)
+{
+    cout << endl;
+    cout << "   Alien    | Health ";
+    cout.width(3);
+    cout << AlienHP_DMG[0];
+    cout.width(0);
+    cout << ", Attack ";
+    cout.width(3);
+    cout << AlienHP_DMG[1] << endl;
+
+    for (int x=0; x<Zombies; ++x)
+    {
+        string ZombieName;
+        if (ZombieNum == x+1)
+        {
+            ZombieName = "-> Zombie ";
+        }
+
+        else
+        {
+            ZombieName = "   Zombie ";
+        }
+        cout << ZombieName << x+1 << " | Health ";
+        cout.width(3);
+        cout << ZombieStats[x][0];
+        cout.width(0);
+        cout << ", Attack ";
+        cout.width(3);
+        cout << ZombieStats[x][1];
+        cout.width(0);
+        cout << ", Range ";
+        cout << ZombieStats[x][2] << endl;
+    }
+    cout << endl;
+
+}
+
+void Find(vector<vector<char>> Board, int Row, int Column, char Wanted, int &FoundRow, int &FoundColumn)
+{
+    for (int i=0; i<Row; ++i)
+    {
+        for (int j=0; j<Column; ++j)
+        {
+            if (Board[i][j] == Wanted)
+            {
+                FoundRow = i;
+                FoundColumn = j;
+                break;
+            } 
+        }
+    }
+}
+
+void ZombieMovement(vector<vector<char>> &Board, int Row, int Column, int ZombieNum)
+{
+    int TempZombieNum = ZombieNum + 48;
+    char ZombieChar = TempZombieNum;
+
+    int ZRow, ZColumn;
+    Find(Board, Row, Column, ZombieChar, ZRow, ZColumn);
+
+    //cout << Board[ZRow][ZColumn] << endl;
+
+    while (true)
+    {
+        int MoveRow;
+        int MoveColumn;
+        int RandomDirection = rand() % 4;
+
+        switch (RandomDirection)
+        {
+            case 0: //right
+                MoveRow = ZRow;
+                MoveColumn = ZColumn + 1;
+                break;
+
+            case 1: //left
+                MoveRow = ZRow;
+                MoveColumn = ZColumn - 1;
+                break;
+
+            case 2: //down
+                MoveRow = ZRow + 1;
+                MoveColumn = ZColumn;
+                break;
+
+            case 3: //up
+                MoveRow = ZRow - 1;
+                MoveColumn = ZColumn;
+                break;
+        }
+
+        if (MoveColumn == Column || MoveRow == Row || MoveColumn == -1 || MoveRow == -1)
+        {
+            continue;
+        }
+
+        else if ((Board[MoveRow][MoveColumn] == 'A') || 
+                (48 < Board[MoveRow][MoveColumn] && Board[MoveRow][MoveColumn] < 58))
+        {
+            continue;
+        }
+
+        else
+        {
+            Board[ZRow][ZColumn] = ' ';
+            Board[MoveRow][MoveColumn] = ZombieChar;
+            break;
+        }
+    }
+}
+
+void DisplayStatOnAlienTurn(int AlienHP_DMG[], int ZombieStats[][3], int Zombies)
+{
+    //"   Alien    "
+    cout << endl;
+    cout << "-> Alien    | Health ";
+    cout.width(3);
+    cout << AlienHP_DMG[0];
+    cout.width(0);
+    cout << ", Attack ";
+    cout.width(3);
+    cout << AlienHP_DMG[1] << endl;
+
+    for (int x=0; x<Zombies; ++x)
+    {
+        cout << "   Zombie " << x+1 << " | Health ";
+        cout.width(3);
+        cout << ZombieStats[x][0];
+        cout.width(0);
+        cout << ", Attack ";
+        cout.width(3);
+        cout << ZombieStats[x][1];
+        cout.width(0);
+        cout << ", Range ";
+        cout << ZombieStats[x][2] << endl;
+    }
+    cout << endl;
+
+}
+
+void AlienTurn(vector<vector<char>> &Board, int Row, int Column, string Direction)
+{
+    if (Direction == "right")
+        {   
+           AlienRight (Board, Row, Column);
+        }
+
+    else if (Direction == "left")
+        {   
+            AlienLeft (Board, Row, Column);
+        }
+
+    else if (Direction == "down")
+        {   
+            AlienDown (Board, Row, Column);
+        }
+
+    else if (Direction == "up")
+        {   
+            AlienUp (Board, Row, Column);
+        }
+}
+
+void ZombieAttack(vector<vector<char>> Board, int Row, int Column, 
+                  int ZombieNum, int ZombieStats[][3], int AlienHP_DMG[])
+{
+    int TempZombieNum = ZombieNum + 48;
+    char ZombieChar = TempZombieNum;
+
+    int ZRow, ZColumn;
+    Find(Board, Row, Column, ZombieChar, ZRow, ZColumn);
+
+    int ZombieRange = ZombieStats[ZombieNum-1][2];
+    int ZombieDMG = ZombieStats[ZombieNum-1][1];
+
+    int RightAttack;
+    int LeftAttack;
+    int DownAttack;
+    int UpAttack;
+    int OrginalAlienHealth = AlienHP_DMG[0];
+
+    for (int x=1; x<=ZombieRange; ++x)
+    {
+        RightAttack = ZColumn + x;
+        LeftAttack = ZColumn - x;
+        DownAttack = ZRow + x;
+        UpAttack = ZRow - x;
+
+        if (!(RightAttack >= Column))
+        {
+            if (Board[ZRow][RightAttack] == 'A')
+            {
+                cout << "The Zombie hits the Alien and does " << ZombieDMG << " damage to the Alien!" << endl;
+                AlienHP_DMG[0] = AlienHP_DMG[0] - ZombieDMG;
+            }
+        }
+
+        if (!(LeftAttack <= -1))
+        {
+            if (Board[ZRow][LeftAttack] == 'A')
+            {
+                cout << "The Zombie hits the Alien and does " << ZombieDMG << " damage to the Alien!" << endl;
+                AlienHP_DMG[0] = AlienHP_DMG[0] - ZombieDMG;
+            }
+        }
+
+        if (!(DownAttack >= Row))
+        {
+            if (Board[DownAttack][ZColumn] == 'A')
+            {
+                cout << "The Zombie hits the Alien and does " << ZombieDMG << " damage to the Alien!" << endl;
+                AlienHP_DMG[0] = AlienHP_DMG[0] - ZombieDMG;
+            }
+        }
+
+        if (!(UpAttack <= -1))
+        {
+            if (Board[UpAttack][ZColumn] == 'A')
+            {
+                cout << "The Zombie hits the Alien and does " << ZombieDMG << " damage to the Alien!" << endl;
+                AlienHP_DMG[0] = AlienHP_DMG[0] - ZombieDMG;
+            }
+        }
+    }
+
+    if (OrginalAlienHealth == AlienHP_DMG[0])
+    {
+        cout << "The Alien was not within range of the Zombie. It missed its attack!" << endl;
+    }
+    
+
+    
+
+}
+
+
 
 int main() 
 {
@@ -373,39 +647,55 @@ int main()
         }
     }
 
-    DisplayBoard (Board, Row, Column);
+    //int AlienHP = 100;
+    //int AlienDMG = 0;
 
-    string Direction;
-    while (Direction != "stop")
+    int AlienHP_DMG[2] = {100,0};
+    //HP - index 0
+    //DMG - index 1
+
+    
+
+    int ZombieStats[Zombies][3];
+
+    for (int x=0; x<Zombies; ++x)
+    {
+        ZombieStats[x][0] = {((rand() % 21)*10) + 50}; //Multiples of 10, 50 < x < 250
+        ZombieStats[x][1] = {((rand() % 8)*5) + 5}; //Multiples of 5, 5 < x < 40
+        ZombieStats[x][2] =  {(rand() % 3) + 1}; //Range, 1 < x < 4
+    } 
+
+    DisplayBoard (Board, Row, Column);
+    DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+    
+    string Input;
+    while (true)
     {
         cout <<"which direction do you want the Alien to move in?";
-        cin >> Direction;
+        cin >> Input;
         
-        if (Direction == "arrow")
+        if (Input == "arrow")
         {
             ChangeArrow (Board, Row, Column);
+            continue;
         }
 
-        else if (Direction == "right")
+        else if (Input == "right" || Input == "left" || Input == "down" || Input == "up")
         {   
-           AlienRight (Board, Row, Column);
+           AlienTurn (Board, Row, Column, Input);
         }
+        
+        for (int x=1; x<=Zombies; ++x)
+        {
+            cout << "Zombie " << x << "'s turn!" << endl;
+            ZombieMovement(Board, Row, Column, x);
+            DisplayBoard (Board, Row, Column);
+            DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
 
-        else if (Direction == "left")
-        {   
-            AlienLeft (Board, Row, Column);
-        }
-
-        else if (Direction == "down")
-        {   
-            AlienDown (Board, Row, Column);
-        }
-
-        else if (Direction == "up")
-        {   
-            AlienUp (Board, Row, Column);
+            //Attack
+            ZombieAttack(Board, Row, Column, x, ZombieStats, AlienHP_DMG);
         }
     }
-    DotRandomiser(Board, GameObjects, Row, Column);
+    DotRandomiser(Board, Row, Column);
     DisplayBoard (Board, Row, Column);
 }
