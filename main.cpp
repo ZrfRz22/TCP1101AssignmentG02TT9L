@@ -15,13 +15,10 @@
 #include <string>
 #include <stdlib.h>
 #include <cmath>
-
 #include<fstream>
 using namespace std;
 
 char GameObjects[8] = {'H', ' ', 'P', '>', '<', 'V', '^', 'R'};
-
-
 
 int ClearScreen()
     {
@@ -32,7 +29,7 @@ int ClearScreen()
         #endif
     }
 
-    int Pause()
+int Pause()
     {
         #if defined(_WIN32)
             return std::system("pause");
@@ -228,9 +225,7 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
                     ZColumn[x] = j;
                 }
             }
-        }
-
-        cout << "Hello " << ZRow[x] << " " << ZColumn[x] << endl;                
+        }                
         ZombieCounter += 1;
     }
 
@@ -240,7 +235,6 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
     {
         RowDistance = ARow - ZRow[x];
         ColumnDistance = AColumn - ZColumn[x];
-        cout << "Zombie " << x+1 << " : " << pythagoras(RowDistance,ColumnDistance) << endl;
         DistanceArray[x] = pythagoras(RowDistance,ColumnDistance);
     }
 
@@ -277,8 +271,6 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
 
     int SelectedZombie = rand() % Counter;
 
-    cout << "Smallest distance = " << SmallestDistance[SelectedZombie] <<
-            " from Zombie " << SmallestIndex[SelectedZombie]+1 << endl;
     cout << "Pod does 20 damage to Zombie " << SmallestIndex[SelectedZombie]+1 << endl;
     ZombieStats[SmallestIndex[SelectedZombie]][0] -= 20;
 
@@ -289,18 +281,7 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
             cout << "Alien has killed Zombie " << SmallestIndex[SelectedZombie]+1 << " via pod" << endl;
             
         }
-
-    for (int x=0; x<Zombies; ++x)
-    {
-        cout << "Distance: " << SmallestDistance[x]
-             << ", Zombie : " << SmallestIndex[x]+1 << endl;
-    }
-
     cout << endl;
-
-    
-
-
 }
 
 bool HitBorder(vector<vector<char>> &Board, int Row, int Column, int NextRow, int NextColumn)
@@ -339,6 +320,7 @@ void AlienRight (vector<vector<char>> &Board, int Row, int Column,
     int Counter = 0;
     while (true)
     {
+        ClearScreen();
         if (HitBorder(Board, Row, Column, ARow, AColumn+Counter+1) ||
             HitRock(Board, ARow, AColumn+Counter+1) ||
             HitZombie(Board, ARow, AColumn+Counter+1, AlienHP_DMG, ZombieStats))
@@ -346,6 +328,8 @@ void AlienRight (vector<vector<char>> &Board, int Row, int Column,
             DotRandomiser (Board, Row, Column);
             DisplayBoard (Board, Row, Column);
             DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+            Pause();
+            ClearScreen();
             break;
         }
 
@@ -375,7 +359,7 @@ void AlienRight (vector<vector<char>> &Board, int Row, int Column,
             {
                 HitHealthPack(AlienHP_DMG);
             }
-            
+            Pause();
         }
     }
 }
@@ -389,6 +373,7 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column,
     int Counter = 0;
     while (true)
     {
+        ClearScreen();
         if (HitBorder(Board, Row, Column, ARow, AColumn-Counter-1) ||
             HitRock(Board, ARow, AColumn-Counter-1) ||
             HitZombie(Board, ARow, AColumn-Counter-1, AlienHP_DMG, ZombieStats))
@@ -396,6 +381,8 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column,
             DotRandomiser (Board, Row, Column);
             DisplayBoard (Board, Row, Column);
             DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+            Pause();
+            ClearScreen();
             break;
         }
 
@@ -406,6 +393,7 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column,
             Board[ARow][AColumn-Counter-1] = 'A';
             DisplayBoard (Board, Row, Column);
             DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+
             Counter += 1;
 
             if (Temp == '<' || Temp == '>' || Temp == 'V' || Temp == '^')
@@ -424,7 +412,7 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column,
             {
                 HitHealthPack(AlienHP_DMG);
             }
-            
+            Pause();
         }
     }
 }
@@ -438,6 +426,7 @@ void AlienDown (vector<vector<char>> &Board, int Row, int Column,
     int Counter = 0;
     while (true)
     {
+        ClearScreen();
         if (HitBorder(Board, Row, Column, ARow+Counter+1, AColumn) ||
             HitRock(Board, ARow+Counter+1, AColumn) ||
             HitZombie(Board, ARow+Counter+1, AColumn, AlienHP_DMG, ZombieStats))
@@ -445,6 +434,8 @@ void AlienDown (vector<vector<char>> &Board, int Row, int Column,
             DotRandomiser (Board, Row, Column);
             DisplayBoard (Board, Row, Column);
             DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+            Pause();
+            ClearScreen();
             break;
         }
 
@@ -474,6 +465,7 @@ void AlienDown (vector<vector<char>> &Board, int Row, int Column,
             {
                 HitHealthPack(AlienHP_DMG);
             }
+            Pause();
         }
     }
 }
@@ -487,6 +479,7 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column,
     int Counter = 0;
     while (true)
     {
+        ClearScreen();
         if (HitBorder(Board, Row, Column, ARow-Counter-1, AColumn) ||
             HitRock(Board, ARow-Counter-1, AColumn) ||
             HitZombie(Board, ARow-Counter-1, AColumn, AlienHP_DMG, ZombieStats))
@@ -494,6 +487,8 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column,
             DotRandomiser (Board, Row, Column);
             DisplayBoard (Board, Row, Column);
             DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+            Pause();
+            ClearScreen();
             break;
         }
 
@@ -523,6 +518,7 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column,
             {
                 HitHealthPack(AlienHP_DMG);
             }
+            Pause();
         }
     }
 }
@@ -530,6 +526,7 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column,
 void ArrowMovement (vector<vector<char>> &Board, int Row, int Column, char Arrow, 
                     int AlienHP_DMG[], int ZombieStats[][3], int Zombies)
 {
+    Pause();
     switch (Arrow)
     {
         case '>':
@@ -552,7 +549,8 @@ void ArrowMovement (vector<vector<char>> &Board, int Row, int Column, char Arrow
 
 void ChangeArrow (vector<vector<char>> &Board, const int Row, const int Column)
 {
-    int ArrowRow, ArrowColumn;
+    int ArrowRow;
+    int ArrowColumn;
     char NewArrow;
     cout <<"which arrow do you want to change" << endl;
     cout <<"Arrow Row position = "; cin >> ArrowRow; 
@@ -567,6 +565,7 @@ void ChangeArrow (vector<vector<char>> &Board, const int Row, const int Column)
             if (NewArrow == '>' || NewArrow == '<' || NewArrow == 'V' || NewArrow == '^')
             {
                 Board[ArrowRow][ArrowColumn] = NewArrow;
+                ClearScreen();
             }
 
             else
@@ -582,12 +581,9 @@ void ChangeArrow (vector<vector<char>> &Board, const int Row, const int Column)
     }
     
     else
-        {
-            cout << "The Column or Row number entered was out of range, please try again." << endl;
-        }
-    
-
-    DisplayBoard (Board, Row, Column);
+    {
+        cout << "The Column or Row number entered was out of range, please try again." << endl;
+    }
 }
 
 void DisplayStatOnZombieTurn(int AlienHP_DMG[], int ZombieStats[][3], int Zombies, int ZombieNum)
@@ -636,36 +632,38 @@ void ZombieMovement(vector<vector<char>> &Board, int Row, int Column, int Zombie
     int ZRow, ZColumn;
     Find(Board, Row, Column, ZombieChar, ZRow, ZColumn);
 
-    //cout << Board[ZRow][ZColumn] << endl;
-
-    vector<int> RandomArray = {0,1,2,3};
     int StuckCounter = 0;
     while (true)
     {
         int MoveRow;
         int MoveColumn;
         int RandomDirection = rand() % 4;
+        string ZombieMovementNotif;
 
         switch (RandomDirection)
         {
             case 0: //right
                 MoveRow = ZRow;
                 MoveColumn = ZColumn + 1;
+                ZombieMovementNotif = " moved one space to the right";
                 break;
 
             case 1: //left
                 MoveRow = ZRow;
                 MoveColumn = ZColumn - 1;
+                ZombieMovementNotif = " moved one space to the left";
                 break;
 
             case 2: //down
                 MoveRow = ZRow + 1;
                 MoveColumn = ZColumn;
+                ZombieMovementNotif = " moved one space to downwards";
                 break;
 
             case 3: //up
                 MoveRow = ZRow - 1;
                 MoveColumn = ZColumn;
+                ZombieMovementNotif = " moved one space to the upwards";
                 break;
         }
         
@@ -692,6 +690,7 @@ void ZombieMovement(vector<vector<char>> &Board, int Row, int Column, int Zombie
         {
             Board[ZRow][ZColumn] = ' ';
             Board[MoveRow][MoveColumn] = ZombieChar;
+            cout << "Zombie " << ZombieChar << ZombieMovementNotif << endl;
             break;
         }
     }
@@ -699,7 +698,6 @@ void ZombieMovement(vector<vector<char>> &Board, int Row, int Column, int Zombie
 
 void DisplayStatOnAlienTurn(int AlienHP_DMG[], int ZombieStats[][3], int Zombies)
 {
-    //"   Alien    "
     cout << endl;
     cout << "-> Alien    | Health ";
     cout.width(3);
@@ -799,25 +797,467 @@ void ZombieAttack(vector<vector<char>> Board, int Row, int Column,
     }
 }
 
-int main() 
+void SaveGameAgain(vector<vector<char>> Board, int Row, int Column,
+              int AlienHP_DMG[], int ZombieStats[][3], int Zombies, string FileName)
 {
-    int Row, Column;
-    srand(time(0));
+    fstream File(FileName, ios::out);
+        File << Row << "\n";
+        File << Column << "\n";
+        File << Zombies << "\n";
+        File << AlienHP_DMG[0] <<  "\n";
+        File << AlienHP_DMG[1] << "\n";
+        
+        for (int x=0; x<Zombies; ++x)
+        {
+            File << ZombieStats[x][0] << "\n";
+            File << ZombieStats[x][1] << "\n";
+            File << ZombieStats[x][2] << "\n";
+        }
 
-    cout << "Please enter the dimensions of your board!" << endl;
-    cout << "Row(Horizontal) = "; cin >> Row;
-    cout << "Column(Vertical) = "; cin >> Column;
-    cout << endl;
+        for (int i=0; i<Row; ++i)
+        {
+            for (int j=0; j<Column; ++j)
+            {
+                File << Board [i][j] << "\n";
+            }
+        }
+    File.close();
+    cout << "Game successfully saved!" << endl;
+}
+
+string SaveGame(vector<vector<char>> Board, int Row, int Column,
+              int AlienHP_DMG[], int ZombieStats[][3], int Zombies)
+{   
+    string FileName;
+    cout << "Name for the save game file? : "; cin >> FileName;
+    FileName += ".txt";
+
+    ofstream File(FileName, ios::out);
+        File << Row << "\n";
+        File << Column << "\n";
+        File << Zombies << "\n";
+        File << AlienHP_DMG[0] <<  "\n";
+        File << AlienHP_DMG[1] << "\n";
+        
+        for (int x=0; x<Zombies; ++x)
+        {
+            File << ZombieStats[x][0] << "\n";
+            File << ZombieStats[x][1] << "\n";
+            File << ZombieStats[x][2] << "\n";
+        }
+
+        for (int i=0; i<Row; ++i)
+        {
+            for (int j=0; j<Column; ++j)
+            {
+                File << Board [i][j] << "\n";
+            }
+        }
+    File.close();
+    cout << "Game successfully saved!" << endl;
+    return FileName;
+}
+
+int main();
+void LoadGame();
+void StartGame();
+
+void TryAgain()
+{
+    string Input;
+    cout << "Want to play again? (yes/no)"; cin >> Input;
+
+    while(true)
+    {
+        if (Input == "yes")
+        {
+            cout << "Starting a new game..." << endl;
+            Pause();
+            ClearScreen();
+            StartGame();
+            break;
+        }
+
+        else if (Input == "No")
+        {
+            cout << "Quitting to Main Menu..." << endl;
+            Pause();
+            ClearScreen();
+            main();
+            break;
+        }
+
+        else
+        {
+            cout << "Please enter a valid command" << endl;
+            continue;
+        }
+    }
+}
+
+void TurnSystem(vector<vector<char>> &Board, int Row, int Column,
+                int AlienHP_DMG[], int ZombieStats[][3], int Zombies) 
+{
+    string Input;
+    int SaveCounter = 0;
+    string SavedFileName;
+    while (true)
+    {
+        DisplayBoard (Board, Row, Column);
+        DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+
+        //Alien Turn
+        cout <<"which direction do you want the Alien to move in?" << endl;
+        cout << "-> "; cin >> Input; cout << endl;
+        
+        if (Input == "arrow")
+        {
+            ChangeArrow (Board, Row, Column);
+            continue;
+        }
+
+        if (Input == "right")
+        {   
+            AlienRight (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        }
+
+        else if (Input == "left")
+        {   
+            AlienLeft (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        }
+
+        else if (Input == "down")
+        {   
+            AlienDown (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        }
+
+        else if (Input == "up")
+        {   
+            AlienUp (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        }
+
+        else if (Input == "save")
+        {   
+            if (SaveCounter == 0)
+            {
+                SavedFileName = SaveGame(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+                SaveCounter += 1;
+                Pause();
+                ClearScreen();
+            }
+        
+            else
+            {
+                SaveGameAgain(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies, SavedFileName);
+                SaveCounter += 1;
+                Pause();
+                ClearScreen();
+            }
+            continue;
+        }
+
+        else if (Input == "load")
+        {   
+            LoadGame();
+            break;
+        }
+
+        else if (Input == "quit")
+        {
+            string SaveOption;
+            cout << "If you quit without saving, progress to this game will be lost! (type cancel to continue game)" << endl;
+            cout << "Save current game? (yes/no)" << endl; cout << "-> "; cin >> SaveOption;
+
+            if (SaveOption == "yes")
+            {
+                if (SaveCounter == 0)
+                {
+                    SavedFileName = SaveGame(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+                    SaveCounter += 1;
+                    Pause();
+                }
+            
+                else
+                {
+                    SaveGameAgain(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies, SavedFileName);
+                    SaveCounter += 1;
+                    Pause;
+                }
+
+                ClearScreen();
+                cout << "Game exited, Thank you for playing!" << endl;
+                cout << endl;
+                Pause();
+                ClearScreen();
+                main();
+                break;
+            }
+
+            else if (SaveOption == "no")
+            {
+                ClearScreen();
+                cout << "Game was not saved" << endl;
+                cout << "Game exited, Thank you for playing!" << endl;
+                cout << endl;
+                Pause();
+                ClearScreen();
+                main();
+                break;
+            }
+
+            else if (SaveOption == "cancel")
+            {
+                ClearScreen();
+                continue;
+            }
+
+            else
+            {   
+                ClearScreen();
+                cout << "Please enter a valid command, try again." << endl;
+                continue;
+            }
+        }
+
+        else if (Input == "help")
+        {
+            cout << "List of commands" << endl;
+            cout << "--------------------------------------------------" << endl;
+            cout << "right : Move Alien to the right" << endl;
+            cout << "left  : Move Alien to the left" << endl;
+            cout << "up    : Move Alien upwards" << endl;
+            cout << "down  : Move Alien downwards" << endl;
+            cout << "arrow : Change the direction of a seclected arrow" << endl;
+            cout << "quit  : Quit current game" << endl;
+            cout << "save  : Save current game" << endl;
+            cout << "load  : Load a previously saved game" << endl;
+            cout << "help  : Shows a list of valid in-game commands" << endl;
+            cout << endl;
+            
+            Pause();
+            ClearScreen();
+            continue;
+        } 
+
+        else
+        {
+            ClearScreen();
+            cout << "Please enter a valid command, try again." << endl;
+            continue;
+        }
+
+        AlienHP_DMG[1] = 0;
+        
+        //Zombie turn
+        int ZombieDeathCounter = 0;
+        for (int x=1; x<=Zombies; ++x)
+        {
+            if (ZombieStats[x-1][0] <= 0)
+            {
+                ZombieDeathCounter += 1;
+                continue;
+            }
+
+            else
+            {
+                cout << "Zombie " << x << "'s turn!" << endl;
+                DisplayBoard (Board, Row, Column);
+                DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
+                Pause();
+                ClearScreen();
+
+                //Zombie Movement
+                ZombieMovement(Board, Row, Column, x);
+                DisplayBoard (Board, Row, Column);
+                DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
+                Pause();
+                ClearScreen();
+
+                //Zombie Attack
+                ZombieAttack(Board, Row, Column, x, ZombieStats, AlienHP_DMG);
+                DisplayBoard (Board, Row, Column);
+                DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
+                Pause();
+                ClearScreen();
+            }
+            
+        }
+
+        if (ZombieDeathCounter == Zombies)
+        {
+            DisplayBoard (Board, Row, Column);
+            DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+
+            cout << "_____________________________________" << endl;
+            cout << "|                                   |" << endl;
+            cout << "|       ALL ZOMBIES HAVE DIED       |" << endl;
+            cout << "|  YOU HAVE WON, CONGRATULATIONS!!  |" << endl;
+            cout << "|___________________________________|" << endl;
+            
+            break;
+        }
+
+        if (AlienHP_DMG[0] <= 0)
+        {
+            DisplayBoard (Board, Row, Column);
+            DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
+
+            cout << "_____________________________________" << endl;
+            cout << "|                                   |" << endl;
+            cout << "|         THE ALIEN HAS DIED        |" << endl;
+            cout << "|  YOU HAVE LOST, MUHAHAHAHAHAHA!!  |" << endl;
+            cout << "|___________________________________|" << endl;
+            
+            break;
+        }
+        
+    }
+
+    TryAgain();
+}
+
+void LoadGame()
+{   
+    string FileName;
+    cout << "Name of the saved game file? : "; cin >> FileName;
+    FileName += ".txt";
+
+    int Row, Column, Zombies;
+    int AlienHP_DMG[2];
+    int ZombieStats[Zombies][3];
+
+    ifstream File;
+    int SizeCounter = 0;
+    File.open(FileName,ios::in);
+    if(File.is_open())
+    { 
+        ClearScreen();
+        cout << "saved game file found, opening..." << endl;
+        cout << endl;
+        Pause();
+        
+        string Line;
+        while(getline(File, Line))
+        {
+            cout << Line;
+            SizeCounter += 1;
+        }
+        File.close();
+
+        string txtArray[SizeCounter];
+        int Counter = 0;
+
+        File.open(FileName,ios::in);
+        if(File.is_open())
+        { 
+            string Line;
+            while(getline(File, Line))
+            {
+                txtArray[Counter] = Line;
+                Counter += 1;
+            }
+            File.close();
+        }
+
+        //stoi converts const char* into int
+        //.c_str() converts string into const char*
+
+        Row = stoi(txtArray[0].c_str());
+        Column = stoi(txtArray[1].c_str());
+        Zombies = stoi(txtArray[2].c_str());
+        AlienHP_DMG[0] = stoi(txtArray[3].c_str());
+        AlienHP_DMG[1] = stoi(txtArray[4].c_str());
+
+        int ArrayCounter = 5;
+        for (int x=0; x<Zombies; ++x)
+        {
+            ZombieStats[x][0] = stoi(txtArray[ArrayCounter].c_str());
+            ZombieStats[x][1] = stoi(txtArray[ArrayCounter+1].c_str());
+            ZombieStats[x][2] = stoi(txtArray[ArrayCounter+2].c_str());
+            ArrayCounter += 3;
+        }
+
+        vector<vector<char>> Board( Row , vector<char> (Column, 'L'));
+        int ArrayCounter2 = 0;
+        for (int i=0; i<Row; ++i)
+        {
+            for (int j=0; j<Column; ++j)
+            {
+                string Temp = txtArray[ArrayCounter+ArrayCounter2];
+                char Temp2 = Temp[0];
+                Board[i][j] = Temp2;
+                ArrayCounter2 += 1;
+            }
+        }
+        TurnSystem(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+    }
+
+    else
+    {
+        cout << "The file name you searched does not exist or has been deleted." << endl;
+        Pause();
+        ClearScreen();
+        main();
+    }
+}
+
+void StartGame() 
+{
+    int Row, Column, Zombies;
+    string UserInput;
+
+    cout << "Do you want to proceed with the default settings? (yes/no)" << endl;
+    cout << "-> "; cin >> UserInput; cout << endl;
+
+    
+    if (UserInput == "no")
+    {
+        cout << "Please enter the dimensions of your board! (Odd numbers ONLY)" << endl;
+
+        cout << "Row(Horizontal) = "; cin >> Row;
+        while (Row % 2 == 0)
+        {
+            cout << "Please enter an odd number for Rows" << endl;
+            cout << "Row(Horizontal) = "; cin >> Row; cout << endl;
+        }
+
+        cout << "Column(Vertical) = "; cin >> Column; 
+        while (Column % 2 == 0)
+        {
+            cout << "Please enter an odd number for Column" << endl;
+            cout << "Column(Vertical) = "; cin >> Column; cout << endl;
+        }
+
+        cout << endl;
+        cout << "Please enter the number of Zombies! (Not more than 10 and not less than 1!) " << endl;
+        cout << "Zombies? = "; cin >> Zombies;  cout << endl;
+        while (Zombies <= 0 || Zombies >= 10)
+        {
+            cout << "Please enter a value LESS than 10" << endl;
+            cout << "Zombies? = "; cin >> Zombies; cout << endl;
+        }
+    }
+
+    else if (UserInput == "yes")
+    {
+        Row = 5;
+        Column = 11;
+        Zombies = 1;
+    }
+
+    else
+    {
+        cout << "Please enter a valid command, try again." << endl;
+        StartGame();
+    }
+    
+    srand(time(0));
 
     vector<vector<char>> Board( Row , vector<char> (Column, 'L'));
     
     int MidpointRow = (Row/2);
     int MidpointColumn = (Column/2);
     Board[MidpointRow][MidpointColumn] = 'A';
-    
-    int Zombies;
-    cout << "Please enter the number of Zombies!" << endl;
-    cout << "Zombies? = "; cin >> Zombies;
 
     int Counter = 0;
     while (Counter < Zombies)
@@ -847,17 +1287,13 @@ int main()
         }
     }
 
+    int AlienHP_DMG[2] = {100,0};
     //int AlienHP = 100;
     //int AlienDMG = 0;
-
-    int AlienHP_DMG[2] = {100,0};
     //HP - index 0
     //DMG - index 1
 
-    
-
     int ZombieStats[Zombies][3];
-
     for (int x=0; x<Zombies; ++x)
     {
         ZombieStats[x][0] = {((rand() % 21)*10) + 50}; //HP - Multiples of 10, 50 < x < 250 
@@ -865,95 +1301,54 @@ int main()
         ZombieStats[x][2] =  {(rand() % 4) + 2}; //Range, 2 < x < 5
     } 
 
-    DisplayBoard (Board, Row, Column);
-    DisplayStatOnAlienTurn(AlienHP_DMG, ZombieStats, Zombies);
-    
-    string Input;
-    while (true)
+    Pause();
+    ClearScreen();
+    TurnSystem(Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+}
+
+int main()
+{
+    string UserInput;
+
+    while(true)
     {
-        //Alien Turn
-         
-        cout <<"which direction do you want the Alien to move in?";
-        cin >> Input;
-        
-        if (Input == "arrow")
+        cout << "-------- ALIEN VS ZOMBIES --------" << endl;
+        cout << endl;
+        cout << "Game settings (Default)" << endl;
+        cout << "-----------------------" << endl;
+        cout << "Board Rows      : 5" << endl;
+        cout << "Board Columns   : 11" << endl;
+        cout << "No. of Zombies  : 1" << endl;
+        cout << endl;
+        cout << "Type start to begin a game! (Or quit to exit the game)" << endl;
+        cout << "Type load to load up a previously saved game!" << endl;
+        cout << "-> "; cin >> UserInput; cout << endl;
+
+        if (UserInput == "start")
         {
-            ChangeArrow (Board, Row, Column);
-            continue;
+            Pause();
+            ClearScreen();
+            StartGame();
+            break;
         }
 
-        if (Input == "right")
-        {   
-           AlienRight (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        else if (UserInput == "quit")
+        {
+            ClearScreen();
+            cout << "Game exited. Thanks for playing!" << endl;
+            break;
         }
 
-        else if (Input == "left")
-        {   
-            AlienLeft (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
+        else if (UserInput == "load")
+        {
+            LoadGame();
+            break;
         }
 
-        else if (Input == "down")
-        {   
-            AlienDown (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
-        }
-
-        else if (Input == "up")
-        {   
-            AlienUp (Board, Row, Column, AlienHP_DMG, ZombieStats, Zombies);
-        }
-
-        else
+        else 
         {
             cout << "Please enter a valid command, try again." << endl;
             continue;
         }
-
-        AlienHP_DMG[1] = 0;
-        
-        //Zombie turn
-        int ZombieDeathCounter = 0;
-        for (int x=1; x<=Zombies; ++x)
-        {
-            if (ZombieStats[x-1][0] <= 0)
-            {
-                ZombieDeathCounter += 1;
-                continue;
-            }
-
-            else
-            {
-                cout << "Zombie " << x << "'s turn!" << endl;
-                ZombieMovement(Board, Row, Column, x);
-                DisplayBoard (Board, Row, Column);
-                DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
-
-                //Attack
-                ZombieAttack(Board, Row, Column, x, ZombieStats, AlienHP_DMG);
-                DisplayBoard (Board, Row, Column);
-                DisplayStatOnZombieTurn(AlienHP_DMG, ZombieStats, Zombies, x);
-            }
-            
-        }
-
-        if (ZombieDeathCounter == Zombies)
-        {
-            cout << "_____________________________________" << endl;
-            cout << "|                                   |" << endl;
-            cout << "|       ALL ZOMBIES HAVE DIED       |" << endl;
-            cout << "|  YOU HAVE WON, CONGRATULATIONS!!  |" << endl;
-            cout << "|___________________________________|" << endl;
-            break;
-        }
-
-        if (AlienHP_DMG[0] <= 0)
-        {
-            cout << "_____________________________________" << endl;
-            cout << "|                                   |" << endl;
-            cout << "|         THE ALIEN HAS DIED        |" << endl;
-            cout << "|  YOU HAVE LOST, MUHAHAHAHAHAHA!!  |" << endl;
-            cout << "|___________________________________|" << endl;
-            break;
-        }
-        
     }
 }
