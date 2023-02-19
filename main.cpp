@@ -164,9 +164,24 @@ bool HitZombie(vector<vector<char>> &Board, int NextRow, int NextColumn,
     }
 }
 
-void HitHealthPack()
+void HitHealthPack(int AlienHP_DMG[])
 {
+    if (AlienHP_DMG[0] < 100)
+    {
+        AlienHP_DMG[0] += 20;
+        cout << "Alien gained 20 health" << endl;
 
+        if (AlienHP_DMG[0] >= 100)
+        {
+            AlienHP_DMG[0] = 100;
+            cout << "Alien has gained full health" << endl;
+        }
+    }
+
+    else
+    {
+        cout << "Alien health has reached maximum capacity" << endl;
+    }
 }
 
 double pythagoras(double Length, double Height)
@@ -320,6 +335,11 @@ void AlienRight (vector<vector<char>> &Board, int Row, int Column,
             {
                 HitPod(Board, Row, Column, ZombieStats, Zombies);
             }
+
+            else if (Temp == 'H')
+            {
+                HitHealthPack(AlienHP_DMG);
+            }
             
         }
     }
@@ -363,6 +383,11 @@ void AlienLeft (vector<vector<char>> &Board, int Row, int Column,
             else if (Temp == 'P')
             {
                 HitPod(Board, Row, Column, ZombieStats, Zombies);
+            }
+
+            else if (Temp == 'H')
+            {
+                HitHealthPack(AlienHP_DMG);
             }
             
         }
@@ -410,6 +435,10 @@ void AlienDown (vector<vector<char>> &Board, int Row, int Column,
                 HitPod(Board, Row, Column, ZombieStats, Zombies);
             }
             
+            else if (Temp == 'H')
+            {
+                HitHealthPack(AlienHP_DMG);
+            }
         }
     }
 }
@@ -453,6 +482,11 @@ void AlienUp (vector<vector<char>> &Board, int Row, int Column,
             else if (Temp == 'P')
             {
                 HitPod(Board, Row, Column, ZombieStats, Zombies);
+            }
+
+            else if (Temp == 'H')
+            {
+                HitHealthPack(AlienHP_DMG);
             }
         }
     }
