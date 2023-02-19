@@ -2,7 +2,7 @@
 
 ## Video Demo
 
-Please provide the YouTube link to your [Video Demo](https://youtube.com).
+Please provide the YouTube link to your [Video Demo](https://www.youtube.com/watch?v=MvzsJ1F0EAE).
 
 ## Minimum Requirements
 
@@ -10,9 +10,16 @@ Please provide the YouTube link to your [Video Demo](https://youtube.com).
 
 List all the features completed.
 
-1. Cool Feature #1
-2. Cool Feature #2
-3. *add more*
+1. Alien Movement
+2. Zombie Movement
+3. Border function
+4. Healthpack function
+5. Pod function
+6. Alien & Zombie damage and health stats
+7. Zombie Damage
+8. Alien Damage
+9. Save and Load functions
+10. Main menu functions
 
 ## Contributions
 
@@ -20,21 +27,26 @@ List down the contribution of each group members.
 
 For example:
 
-### Tony Stark
+### KHIRTISHEN A/L THAMBI RAJA
 
-1. Randomly generate game board.
-2. *add more*
+1. Save & Load functions
+2. Quit functions
 
-### Steve Rogers
+###  MUHAMMAD HELMI BIN RAZALI
 
-1. Zombie movement and attack behaviour.
-2. *add more*
+1. Main menu functions
+2. Finalised the Column, Row, Zombie No. menus
+3. Healthpack function
 
-### Dr. Strange
+### MUHAMMAD ZARIF BIN ROZAINI
 
 1. Implement all game objects.
-2. *add more*
+2. Zombie & Alien movement, damage
+3. finalised the Stats display and board display functions
+4. pod functions
+5. Border function
 
 ## Problems Encountered & Solutions
 
-Describe the problems encountered and provide the solutions / plan for the solutions.
+Implementing all fucntions into the programme. - trial & error
+Figuring out the save and load game functions. - trial & error

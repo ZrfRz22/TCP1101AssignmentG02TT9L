@@ -1112,7 +1112,6 @@ void TurnSystem(vector<vector<char>> &Board, int Row, int Column,
         }
         
     }
-
     TryAgain();
 }
 
