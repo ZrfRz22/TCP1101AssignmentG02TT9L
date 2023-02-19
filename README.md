@@ -40,6 +40,8 @@ Type "load" Load up a prfeviously saved game
 For arrow; follow index starting from 0
 ex: Row 1 and Column 1 --> Board[0][0]
 
+DO NOT OPEN IN VS CODE --> ClearScreen() and Pause() functions don't work properly on VS default terminal
+
 ## Progress Log
 
 - [Part 1](PART1.md)
