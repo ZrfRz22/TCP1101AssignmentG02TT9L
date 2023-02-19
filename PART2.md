@@ -14,17 +14,6 @@ List all the features completed.
 2. Cool Feature #2
 3. *add more*
 
-### To Do
-
-List all the features not yet done. Remove this section if there is no incomplete requirements.
-
-1. Cool Feature #1
-2. *add more*
-
-## Additional Features
-
-Describe the additional features that has been implemented.
-
 ## Contributions
 
 List down the contribution of each group members.

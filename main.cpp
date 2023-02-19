@@ -1206,6 +1206,12 @@ void StartGame()
     int Row, Column, Zombies;
     string UserInput;
 
+    cout << "Game settings (Default)" << endl;
+    cout << "-----------------------" << endl;
+    cout << "Board Rows      : 5" << endl;
+    cout << "Board Columns   : 11" << endl;
+    cout << "No. of Zombies  : 1" << endl;
+    cout << endl;
     cout << "Do you want to proceed with the default settings? (yes/no)" << endl;
     cout << "-> "; cin >> UserInput; cout << endl;
 
