@@ -15,9 +15,13 @@
 #include <string>
 #include <stdlib.h>
 #include <cmath>
+
+#include<fstream>
 using namespace std;
 
 char GameObjects[8] = {'H', ' ', 'P', '>', '<', 'V', '^', 'R'};
+
+
 
 int ClearScreen()
     {
@@ -191,6 +195,11 @@ double pythagoras(double Length, double Height)
     return Hypo;
 }
 
+void ZombieDeath (vector<vector<char>> &Board, int ZombieRow, int ZombieColumn)
+{
+    Board[ZombieRow][ZombieColumn] = ' ';
+}
+
 void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][3], int Zombies)
 {
     int ARow, AColumn;
@@ -199,13 +208,29 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
     int ZRow[Zombies]; 
     int ZColumn[Zombies];
 
-    int ZombieCounter = 49;
-    int xtemp, ytemp;
     for (int x=0; x<Zombies; ++x)
     {
-        Find(Board, Row, Column, ZombieCounter, xtemp , ytemp);
-        ZRow[x] = xtemp;
-        ZColumn[x] = ytemp;
+        ZRow[x] = 100; 
+        ZColumn[x] = 100;
+    }
+
+    int ZombieCounter = 49; 
+
+    for (int x=0; x<Zombies; ++x)
+    {
+        for (int i=0; i<Row; ++i)
+        {
+            for (int j=0; j<Column; ++j)
+            {
+                if (ZombieCounter == Board[i][j])
+                {
+                    ZRow[x] = i;
+                    ZColumn[x] = j;
+                }
+            }
+        }
+
+        cout << "Hello " << ZRow[x] << " " << ZColumn[x] << endl;                
         ZombieCounter += 1;
     }
 
@@ -250,8 +275,6 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
         }
     }
 
-
-
     int SelectedZombie = rand() % Counter;
 
     cout << "Smallest distance = " << SmallestDistance[SelectedZombie] <<
@@ -259,11 +282,23 @@ void HitPod(vector<vector<char>> &Board, int Row, int Column, int ZombieStats[][
     cout << "Pod does 20 damage to Zombie " << SmallestIndex[SelectedZombie]+1 << endl;
     ZombieStats[SmallestIndex[SelectedZombie]][0] -= 20;
 
+    if (ZombieStats[SmallestIndex[SelectedZombie]][0] <= 0)
+        {
+            ZombieStats[SmallestIndex[SelectedZombie]][0] = 0;
+            ZombieDeath (Board, ZRow[SmallestIndex[SelectedZombie]], ZColumn[SmallestIndex[SelectedZombie]]);
+            cout << "Alien has killed Zombie " << SmallestIndex[SelectedZombie]+1 << " via pod" << endl;
+            
+        }
+
     for (int x=0; x<Zombies; ++x)
     {
         cout << "Distance: " << SmallestDistance[x]
              << ", Zombie : " << SmallestIndex[x]+1 << endl;
     }
+
+    cout << endl;
+
+    
 
 
 }
@@ -524,23 +559,33 @@ void ChangeArrow (vector<vector<char>> &Board, const int Row, const int Column)
     cout <<"Arrow Column position = "; cin >> ArrowColumn;
 
     if ((0 <= ArrowColumn && ArrowColumn < Column) && (0 <= ArrowRow && ArrowRow < Row))
-    {   
-        cout <<"Enter the new arrow direction = "; cin >> NewArrow; 
-        if (NewArrow == '>' || NewArrow == '<' || NewArrow == 'V' || NewArrow == '^')
-        {
-            Board[ArrowRow][ArrowColumn] = NewArrow;
+    {
+        if (Board[ArrowRow][ArrowColumn] == '>' || Board[ArrowRow][ArrowColumn] == '<' ||
+            Board[ArrowRow][ArrowColumn] == '^' || Board[ArrowRow][ArrowColumn] == 'V')
+        {   
+            cout <<"Enter the new arrow direction = "; cin >> NewArrow; 
+            if (NewArrow == '>' || NewArrow == '<' || NewArrow == 'V' || NewArrow == '^')
+            {
+                Board[ArrowRow][ArrowColumn] = NewArrow;
+            }
+
+            else
+            {
+                cout << "Please enter a valid direction, try again." << endl;
+            }
         }
 
         else
         {
-            cout << "Please enter a valid direction, try again." << endl;
+            cout << "Please enter the coordinates for an Arrow only" << endl;
         }
     }
-
+    
     else
-    {
-        cout << "The Column or Row number entered was out of range, please try again." << endl;
-    }
+        {
+            cout << "The Column or Row number entered was out of range, please try again." << endl;
+        }
+    
 
     DisplayBoard (Board, Row, Column);
 }
